@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Free Basic Tools</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=DM+Mono:wght@400;500&display=swap"
+        rel="stylesheet" />
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #1a1a1a;
+            --surface: #222222;
+            --surface2: #282828;
+            --border: #2e2e2e;
+            --border2: #383838;
+            --text: #d4d4d4;
+            --text-muted: #666;
+            --text-dim: #444;
+            --accent: #7db87d;
+            --accent-bg: #1f2e1f;
+            --accent-brd: #3d5e3d;
+        }
+
+        html,
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        header {
+            border-bottom: 1px solid var(--border);
+            padding: 28px 40px;
+            display: flex;
+            align-items: baseline;
+            gap: 16px;
+        }
+
+        .site-name {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text);
+            letter-spacing: .02em;
+        }
+
+        .site-tag {
+            font-size: 12px;
+            color: var(--text-dim);
+            font-family: 'DM Mono', monospace;
+        }
+
+        main {
+            max-width: 780px;
+            margin: 0 auto;
+            padding: 64px 40px 80px;
+        }
+
+        .intro {
+            margin-bottom: 52px;
+        }
+
+        .intro h1 {
+            font-size: 22px;
+            font-weight: 500;
+            color: var(--text);
+            margin-bottom: 10px;
+            letter-spacing: -.01em;
+        }
+
+        .intro p {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 12px;
+        }
+
+        .tool-card {
+            display: block;
+            text-decoration: none;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 22px 20px;
+            transition: border-color .15s, background .15s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tool-card:hover {
+            background: var(--surface2);
+            border-color: var(--border2);
+        }
+
+        .tool-card:hover .tool-arrow {
+            opacity: 1;
+            transform: translate(0, 0);
+        }
+
+        .tool-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: var(--accent-bg);
+            border: 1px solid var(--accent-brd);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+
+        .tool-icon svg {
+            width: 18px;
+            height: 18px;
+            stroke: var(--accent);
+            fill: none;
+            stroke-width: 1.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .tool-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text);
+            margin-bottom: 5px;
+        }
+
+        .tool-desc {
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .tool-arrow {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 16px;
+            color: var(--text-dim);
+            opacity: 0;
+            transform: translate(-3px, 3px);
+            transition: opacity .15s, transform .15s;
+        }
+
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 20px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .footer-left {
+            font-size: 12px;
+            color: var(--text-dim);
+            font-family: 'DM Mono', monospace;
+        }
+
+        .free-badge {
+            font-size: 11px;
+            font-family: 'DM Mono', monospace;
+            background: var(--accent-bg);
+            color: var(--accent);
+            border: 1px solid var(--accent-brd);
+            border-radius: 5px;
+            padding: 3px 9px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <span class="site-name">Free Basic Tools</span>
+        <span class="site-tag">// no login &nbsp;·&nbsp; no ads &nbsp;·&nbsp; no nonsense</span>
+    </header>
+
+    <main>
+        <div class="intro">
+            <h1>Simple tools, nothing extra.</h1>
+            <p>A small collection of browser-based utilities. Free to use, no account needed.</p>
+        </div>
+
+        <div class="tools-grid">
+
+            <a class="tool-card" href="tools/resizer.html">
+                <div class="tool-icon">
+                    <svg viewBox="0 0 24 24">
+                        <rect x="3" y="3" width="18" height="18" rx="2" />
+                        <path d="M3 9h18M9 21V9" />
+                    </svg>
+                </div>
+                <div class="tool-name">Image Resizer</div>
+                <div class="tool-desc">Set canvas dimensions, place a logo, export in PNG, JPEG, WebP and more.</div>
+                <span class="tool-arrow">↗</span>
+            </a>
+
+            <a class="tool-card" href="tools/qr.html">
+                <div class="tool-icon">
+                    <svg viewBox="0 0 24 24">
+                        <rect x="3" y="3" width="7" height="7" rx="1" />
+                        <rect x="14" y="3" width="7" height="7" rx="1" />
+                        <rect x="3" y="14" width="7" height="7" rx="1" />
+                        <rect x="5" y="5" width="3" height="3" />
+                        <rect x="16" y="5" width="3" height="3" />
+                        <rect x="5" y="16" width="3" height="3" />
+                        <path d="M14 14h3v3h-3zM17 17h3v3h-3zM14 20h3" />
+                    </svg>
+                </div>
+                <div class="tool-name">QR Generator</div>
+                <div class="tool-desc">Turn any URL or text into a QR code. Download instantly.</div>
+                <span class="tool-arrow">↗</span>
+            </a>
+
+        </div>
+    </main>
+
+    <footer>
+        <span class="footer-left">freebasictools</span>
+        <span class="free-badge">free forever</span>
+    </footer>
+
+</body>
+
+</html>

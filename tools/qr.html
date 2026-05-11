@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QR Generator — Free Basic Tools</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=DM+Mono:wght@400;500&display=swap"
+        rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #1a1a1a;
+            --surface: #222222;
+            --surface2: #282828;
+            --border: #2e2e2e;
+            --border2: #383838;
+            --text: #d4d4d4;
+            --text-muted: #666;
+            --text-dim: #444;
+            --accent: #7db87d;
+            --accent-bg: #1f2e1f;
+            --accent-brd: #3d5e3d;
+        }
+
+        html,
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        header {
+            border-bottom: 1px solid var(--border);
+            padding: 20px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: baseline;
+            gap: 14px;
+        }
+
+        .site-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-muted);
+            font-family: 'DM Mono', monospace;
+            text-decoration: none;
+        }
+
+        .site-name:hover {
+            color: var(--text);
+        }
+
+        .page-title {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 40px 80px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+
+        @media(max-width:900px) {
+            .grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media(max-width:600px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .col {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .section-label {
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 2px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .field label {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        input[type=text],
+        input[type=url],
+        textarea,
+        select {
+            background: #1a1a1a;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 13px;
+            padding: 8px 10px;
+            outline: none;
+            width: 100%;
+        }
+
+        input[type=text]:focus,
+        input[type=url]:focus,
+        textarea:focus,
+        select:focus {
+            border-color: #484848;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 68px;
+        }
+
+        select option {
+            background: #1a1a1a;
+        }
+
+        .color-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        input[type=color] {
+            width: 34px;
+            height: 34px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            background: none;
+            padding: 2px;
+            flex-shrink: 0;
+        }
+
+        .range-row {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .range-row span {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        input[type=range] {
+            -webkit-appearance: none;
+            height: 3px;
+            background: #333;
+            border-radius: 2px;
+            outline: none;
+            width: 100%;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 13px;
+            height: 13px;
+            background: #777;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        input[type=range]::-webkit-slider-thumb:hover {
+            background: #aaa;
+        }
+
+        .presets-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5px;
+        }
+
+        .preset-btn {
+            background: #1a1a1a;
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            font-size: 11px;
+            font-family: 'DM Sans', sans-serif;
+            padding: 6px 4px;
+            cursor: pointer;
+            text-align: center;
+            transition: border-color .12s;
+        }
+
+        .preset-btn:hover {
+            border-color: #484848;
+        }
+
+        .checkbox-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .checkbox-row input[type=checkbox] {
+            width: 15px;
+            height: 15px;
+            accent-color: var(--accent);
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .checkbox-row label {
+            font-size: 12px;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            height: 36px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            width: 100%;
+            border: 1px solid var(--border2);
+            background: #1a1a1a;
+            color: var(--text);
+            transition: background .12s, border-color .12s;
+        }
+
+        .btn:hover {
+            background: #272727;
+            border-color: #555;
+        }
+
+        .btn-primary {
+            background: var(--accent-bg);
+            border-color: var(--accent-brd);
+            color: var(--accent);
+        }
+
+        .btn-primary:hover {
+            background: #253525;
+            border-color: #4d6e4d;
+        }
+
+        .btn-dl {
+            background: #1a2e1a;
+            border-color: #3a5e3a;
+            color: #8ec68e;
+        }
+
+        .btn-dl:hover {
+            background: #1f361f;
+            border-color: #4a6e4a;
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-row .btn {
+            flex: 1;
+        }
+
+        .preview-box {
+            background: #141414;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            min-height: 320px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        #qr-output {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+        }
+
+        #qr-canvas-wrapper {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #qr-title-el {
+            font-weight: 700;
+            text-align: center;
+            line-height: 1.3;
+        }
+
+        #qr-code-el {
+            position: relative;
+            display: inline-block;
+        }
+
+        #qr-code-el canvas,
+        #qr-code-el img {
+            display: block;
+        }
+
+        #logo-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #fff;
+            padding: 4px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+        }
+
+        #logo-overlay img {
+            display: block;
+            object-fit: contain;
+        }
+
+        #qr-desc-el {
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        .empty-hint {
+            text-align: center;
+            color: var(--text-dim);
+            font-size: 13px;
+            line-height: 1.9;
+        }
+
+        .divider {
+            border: none;
+            border-top: 1px solid var(--border);
+        }
+
+        .tip {
+            font-size: 11px;
+            color: var(--text-dim);
+            font-family: 'DM Mono', monospace;
+            line-height: 1.6;
+        }
+
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 18px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .footer-left {
+            font-size: 12px;
+            color: var(--text-dim);
+            font-family: 'DM Mono', monospace;
+        }
+
+        .free-badge {
+            font-size: 11px;
+            font-family: 'DM Mono', monospace;
+            background: var(--accent-bg);
+            color: var(--accent);
+            border: 1px solid var(--accent-brd);
+            border-radius: 5px;
+            padding: 3px 9px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="header-left">
+            <a class="site-name" href="../index.html">Free Basic Tools</a>
+            <span style="color:var(--border2);">/</span>
+            <span class="page-title">QR Generator</span>
+        </div>
+    </header>
+
+    <main>
+        <div class="grid">
+
+            <!-- Col 1: Basic settings -->
+            <div class="col">
+                <p class="section-label">Basic settings</p>
+
+                <div class="field">
+                    <label>URL or text</label>
+                    <input type="text" id="inp-link" placeholder="https://example.com" />
+                </div>
+
+                <div class="field">
+                    <label>Color presets</label>
+                    <div class="presets-grid" id="presets-grid"></div>
+                </div>
+
+                <div class="field">
+                    <label>QR color</label>
+                    <div class="color-row">
+                        <input type="color" id="inp-fg" value="#000000" />
+                        <input type="text" id="inp-fg-hex" value="#000000" style="font-family:'DM Mono',monospace;" />
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label>Background</label>
+                    <div class="color-row">
+                        <input type="color" id="inp-bg" value="#ffffff" />
+                        <input type="text" id="inp-bg-hex" value="#ffffff" style="font-family:'DM Mono',monospace;" />
+                    </div>
+                </div>
+
+                <div class="field range-row">
+                    <label>Display size: <span id="lbl-size">200</span>px</label>
+                    <input type="range" id="inp-size" min="150" max="300" value="200" />
+                </div>
+
+                <div class="field">
+                    <label>Error correction</label>
+                    <select id="inp-level">
+                        <option value="L">Low (7%)</option>
+                        <option value="M">Medium (15%)</option>
+                        <option value="Q">Quartile (25%)</option>
+                        <option value="H">High (30%)</option>
+                    </select>
+                </div>
+
+                <div class="field range-row">
+                    <label>Canvas padding: <span id="lbl-pad">40</span>px</label>
+                    <input type="range" id="inp-pad" min="20" max="100" value="40" />
+                </div>
+            </div>
+
+            <!-- Col 2: Text & Logo -->
+            <div class="col">
+                <p class="section-label">Text &amp; logo</p>
+
+                <div class="field">
+                    <label>Title (optional)</label>
+                    <input type="text" id="inp-title" placeholder="My QR Code" />
+                </div>
+
+                <div id="title-extras" class="col hidden">
+                    <div class="field">
+                        <label>Title font</label>
+                        <select id="inp-title-font"></select>
+                    </div>
+                    <div class="field range-row">
+                        <label>Title size: <span id="lbl-title-fs">32</span>px</label>
+                        <input type="range" id="inp-title-fs" min="20" max="60" value="32" />
+                    </div>
+                    <div class="field range-row">
+                        <label>Title gap: <span id="lbl-title-gap">30</span>px</label>
+                        <input type="range" id="inp-title-gap" min="10" max="80" value="30" />
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label>Description (optional)</label>
+                    <textarea id="inp-desc" placeholder="Scan to visit our website"></textarea>
+                </div>
+
+                <div id="desc-extras" class="col hidden">
+                    <div class="field">
+                        <label>Description font</label>
+                        <select id="inp-desc-font"></select>
+                    </div>
+                    <div class="field range-row">
+                        <label>Desc size: <span id="lbl-desc-fs">16</span>px</label>
+                        <input type="range" id="inp-desc-fs" min="12" max="32" value="16" />
+                    </div>
+                    <div class="field range-row">
+                        <label>Desc gap: <span id="lbl-desc-gap">20</span>px</label>
+                        <input type="range" id="inp-desc-gap" min="10" max="60" value="20" />
+                    </div>
+                </div>
+
+                <div id="text-color-row" class="field hidden">
+                    <label>Text color</label>
+                    <div class="color-row">
+                        <input type="color" id="inp-text-color" value="#000000" />
+                        <input type="text" id="inp-text-color-hex" value="#000000"
+                            style="font-family:'DM Mono',monospace;" />
+                    </div>
+                </div>
+
+                <hr class="divider" />
+
+                <div class="checkbox-row">
+                    <input type="checkbox" id="inp-show-logo" />
+                    <label for="inp-show-logo">Add logo in center</label>
+                </div>
+
+                <div id="logo-extras" class="col hidden">
+                    <div class="field">
+                        <label>Logo URL</label>
+                        <input type="url" id="inp-logo-url" placeholder="https://..." />
+                    </div>
+                    <div class="field range-row">
+                        <label>Logo size: <span id="lbl-logo-size">40</span>%</label>
+                        <input type="range" id="inp-logo-size" min="20" max="60" value="40" />
+                    </div>
+                </div>
+
+                <div class="btn-row" style="margin-top:4px;">
+                    <button class="btn btn-primary" id="btn-generate">Generate</button>
+                    <button class="btn" id="btn-reset">Reset</button>
+                </div>
+            </div>
+
+            <!-- Col 3: Preview -->
+            <div class="col">
+                <p class="section-label">Preview</p>
+
+                <div class="preview-box" id="preview-box">
+                    <div class="empty-hint" id="empty-hint">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="1.2"
+                            stroke-linecap="round" stroke-linejoin="round" style="display:block;margin:0 auto 10px;">
+                            <rect x="3" y="3" width="7" height="7" rx="1" />
+                            <rect x="14" y="3" width="7" height="7" rx="1" />
+                            <rect x="3" y="14" width="7" height="7" rx="1" />
+                            <rect x="5" y="5" width="3" height="3" />
+                            <rect x="16" y="5" width="3" height="3" />
+                            <rect x="5" y="16" width="3" height="3" />
+                        </svg>
+                        Enter a URL and click Generate
+                    </div>
+
+                    <div id="qr-output" class="hidden">
+                        <div id="qr-canvas-wrapper">
+                            <div id="qr-title-el"></div>
+                            <div id="qr-code-el">
+                                <div id="logo-overlay" class="hidden"><img id="logo-img" alt="logo" /></div>
+                            </div>
+                            <div id="qr-desc-el"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn btn-dl hidden" id="btn-download">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1M12 4v12M8 12l4 4 4-4" />
+                    </svg>
+                    Download PNG
+                </button>
+
+                <p class="tip">Use higher error correction when adding a logo.</p>
+            </div>
+
+        </div>
+    </main>
+
+    <footer>
+        <span class="footer-left">freebasictools</span>
+        <span class="free-badge">free forever</span>
+    </footer>
+
+    <script>
+        const FONTS = ['Arial', 'Georgia', 'Times New Roman', 'Courier New', 'Verdana', 'Helvetica', 'Comic Sans MS', 'Impact', 'Trebuchet MS'];
+        const PRESETS = [
+            { name: 'Classic', fg: '#000000', bg: '#ffffff' },
+            { name: 'Ocean', fg: '#0ea5e9', bg: '#f0f9ff' },
+            { name: 'Forest', fg: '#059669', bg: '#f0fdf4' },
+            { name: 'Sunset', fg: '#dc2626', bg: '#fef2f2' },
+            { name: 'Purple', fg: '#9333ea', bg: '#faf5ff' },
+            { name: 'Dark', fg: '#ffffff', bg: '#1f2937' },
+        ];
+
+        function $(id) { return document.getElementById(id); }
+        function show(id) { $(id).classList.remove('hidden'); }
+        function hide(id) { $(id).classList.add('hidden'); }
+        function isHidden(id) { return $(id).classList.contains('hidden'); }
+
+        /* populate font selects */
+        ['inp-title-font', 'inp-desc-font'].forEach(id => {
+            FONTS.forEach(f => {
+                const o = document.createElement('option');
+                o.value = o.textContent = f;
+                $(id).appendChild(o);
+            });
+        });
+
+        /* presets */
+        const presetsGrid = $('presets-grid');
+        PRESETS.forEach(p => {
+            const b = document.createElement('button');
+            b.className = 'preset-btn';
+            b.textContent = p.name;
+            b.style.background = p.bg;
+            b.style.color = p.fg;
+            b.style.border = `1px solid ${p.fg}44`;
+            b.onclick = () => {
+                setColor('fg', p.fg);
+                setColor('bg', p.bg);
+                if ($('qr-output') && !isHidden('qr-output')) renderQR();
+            };
+            presetsGrid.appendChild(b);
+        });
+
+        /* color sync helpers */
+        function setColor(which, val) {
+            $('inp-' + which).value = val;
+            $('inp-' + which + '-hex').value = val;
+        }
+        function bindColor(which) {
+            $('inp-' + which).addEventListener('input', e => {
+                $('inp-' + which + '-hex').value = e.target.value;
+                if (!isHidden('qr-output')) renderQR();
+            });
+            $('inp-' + which + '-hex').addEventListener('input', e => {
+                const v = e.target.value;
+                if (/^#[0-9a-fA-F]{6}$/.test(v)) { $('inp-' + which).value = v; if (!isHidden('qr-output')) renderQR(); }
+            });
+        }
+        bindColor('fg'); bindColor('bg');
+        $('inp-text-color').addEventListener('input', e => { $('inp-text-color-hex').value = e.target.value; if (!isHidden('qr-output')) renderQR(); });
+        $('inp-text-color-hex').addEventListener('input', e => { const v = e.target.value; if (/^#[0-9a-fA-F]{6}$/.test(v)) { $('inp-text-color').value = v; if (!isHidden('qr-output')) renderQR(); } });
+
+        /* range labels */
+        function bindRange(id, lblId, suffix, cb) {
+            $(id).addEventListener('input', e => {
+                $(lblId).textContent = e.target.value;
+                if (cb) cb();
+            });
+        }
+        bindRange('inp-size', 'lbl-size', 'px', () => { if (!isHidden('qr-output')) renderQR(); });
+        bindRange('inp-pad', 'lbl-pad', 'px', () => { if (!isHidden('qr-output')) renderQR(); });
+        bindRange('inp-title-fs', 'lbl-title-fs', 'px', () => { if (!isHidden('qr-output')) renderQR(); });
+        bindRange('inp-title-gap', 'lbl-title-gap', 'px', () => { if (!isHidden('qr-output')) renderQR(); });
+        bindRange('inp-desc-fs', 'lbl-desc-fs', 'px', () => { if (!isHidden('qr-output')) renderQR(); });
+        bindRange('inp-desc-gap', 'lbl-desc-gap', 'px', () => { if (!isHidden('qr-output')) renderQR(); });
+        bindRange('inp-logo-size', 'lbl-logo-size', '%', () => { if (!isHidden('qr-output')) renderQR(); });
+
+        /* show/hide conditional sections */
+        $('inp-title').addEventListener('input', () => {
+            $('inp-title').value.trim() ? show('title-extras') : hide('title-extras');
+            updateTextColorRow();
+            if (!isHidden('qr-output')) renderQR();
+        });
+        $('inp-desc').addEventListener('input', () => {
+            $('inp-desc').value.trim() ? show('desc-extras') : hide('desc-extras');
+            updateTextColorRow();
+            if (!isHidden('qr-output')) renderQR();
+        });
+        function updateTextColorRow() {
+            ($('inp-title').value.trim() || $('inp-desc').value.trim()) ? show('text-color-row') : hide('text-color-row');
+        }
+        $('inp-show-logo').addEventListener('change', e => {
+            e.target.checked ? show('logo-extras') : hide('logo-extras');
+            if (!isHidden('qr-output')) renderQR();
+        });
+        $('inp-logo-url').addEventListener('input', () => { if (!isHidden('qr-output')) renderQR(); });
+        ['inp-title-font', 'inp-desc-font', 'inp-level'].forEach(id => $(id).addEventListener('change', () => { if (!isHidden('qr-output')) renderQR(); }));
+
+        /* QR rendering */
+        let qrInstance = null;
+        function renderQR() {
+            const link = $('inp-link').value.trim();
+            if (!link) return;
+            const fg = $('inp-fg').value;
+            const bg = $('inp-bg').value;
+            const size = parseInt($('inp-size').value);
+            const level = $('inp-level').value;
+            const pad = parseInt($('inp-pad').value);
+            const title = $('inp-title').value.trim();
+            const desc = $('inp-desc').value.trim();
+            const textColor = $('inp-text-color').value;
+            const titleFont = $('inp-title-font').value;
+            const titleFs = parseInt($('inp-title-fs').value);
+            const titleGap = parseInt($('inp-title-gap').value);
+            const descFont = $('inp-desc-font').value;
+            const descFs = parseInt($('inp-desc-fs').value);
+            const descGap = parseInt($('inp-desc-gap').value);
+            const showLogo = $('inp-show-logo').checked;
+            const logoUrl = $('inp-logo-url').value.trim();
+            const logoSize = parseInt($('inp-logo-size').value);
+
+            hide('empty-hint');
+            show('qr-output');
+            show('btn-download');
+
+            /* wrapper padding + bg */
+            const wrapper = $('qr-canvas-wrapper');
+            wrapper.style.padding = pad + 'px';
+            wrapper.style.background = bg;
+            wrapper.style.borderRadius = '12px';
+            wrapper.style.textAlign = 'center';
+            wrapper.style.display = 'inline-flex';
+            wrapper.style.flexDirection = 'column';
+            wrapper.style.alignItems = 'center';
+
+            /* title */
+            const titleEl = $('qr-title-el');
+            if (title) {
+                titleEl.textContent = title;
+                titleEl.style.display = 'block';
+                titleEl.style.fontFamily = titleFont;
+                titleEl.style.fontSize = titleFs + 'px';
+                titleEl.style.color = textColor;
+                titleEl.style.marginBottom = titleGap + 'px';
+                titleEl.style.maxWidth = size + 'px';
+            } else {
+                titleEl.style.display = 'none';
+                titleEl.textContent = '';
+            }
+
+            /* QR code */
+            const codeEl = $('qr-code-el');
+            codeEl.innerHTML = '';
+            codeEl.style.position = 'relative';
+            codeEl.style.display = 'inline-block';
+            codeEl.appendChild($('logo-overlay'));
+
+            if (qrInstance) { try { qrInstance.clear(); } catch (e) { } }
+            qrInstance = new QRCode(codeEl, {
+                text: link,
+                width: size,
+                height: size,
+                colorDark: fg,
+                colorLight: bg,
+                correctLevel: QRCode.CorrectLevel[level]
+            });
+
+            /* logo overlay */
+            const logoOverlay = $('logo-overlay');
+            if (showLogo && logoUrl) {
+                const logoImg = $('logo-img');
+                logoImg.src = logoUrl;
+                logoImg.style.width = '100%';
+                logoImg.style.height = '100%';
+                const px = Math.round(size * (logoSize / 100));
+                logoOverlay.style.width = px + 'px';
+                logoOverlay.style.height = px + 'px';
+                show('logo-overlay');
+            } else {
+                hide('logo-overlay');
+            }
+
+            /* description */
+            const descEl = $('qr-desc-el');
+            if (desc) {
+                descEl.textContent = desc;
+                descEl.style.display = 'block';
+                descEl.style.fontFamily = descFont;
+                descEl.style.fontSize = descFs + 'px';
+                descEl.style.color = textColor;
+                descEl.style.marginTop = descGap + 'px';
+                descEl.style.maxWidth = size + 'px';
+            } else {
+                descEl.style.display = 'none';
+                descEl.textContent = '';
+            }
+        }
+
+        $('btn-generate').addEventListener('click', () => {
+            const link = $('inp-link').value.trim();
+            if (!link) return;
+            renderQR();
+        });
+        $('inp-link').addEventListener('keydown', e => { if (e.key === 'Enter') $('btn-generate').click(); });
+
+        /* download */
+        $('btn-download').addEventListener('click', () => {
+            const wrapper = $('qr-canvas-wrapper');
+            if (!wrapper) return;
+
+            /* wait for QR canvas to appear */
+            const tryCapture = () => {
+                const qrCanvas = wrapper.querySelector('canvas');
+                if (!qrCanvas) { setTimeout(tryCapture, 80); return; }
+
+                const bg = $('inp-bg').value;
+                const pad = parseInt($('inp-pad').value);
+                const title = $('inp-title').value.trim();
+                const desc = $('inp-desc').value.trim();
+                const textColor = $('inp-text-color').value;
+                const titleFont = $('inp-title-font').value;
+                const titleFs = parseInt($('inp-title-fs').value);
+                const titleGap = parseInt($('inp-title-gap').value);
+                const descFont = $('inp-desc-font').value;
+                const descFs = parseInt($('inp-desc-fs').value);
+                const descGap = parseInt($('inp-desc-gap').value);
+                const qrW = qrCanvas.width;
+                const qrH = qrCanvas.height;
+
+                /* measure text heights */
+                const tmpCtx = document.createElement('canvas').getContext('2d');
+                let titleH = 0, descH = 0;
+                if (title) { tmpCtx.font = `bold ${titleFs}px ${titleFont}`; titleH = titleFs + titleGap; }
+                if (desc) { tmpCtx.font = `${descFs}px ${descFont}`; descH = descFs + descGap; }
+
+                const totalW = qrW + pad * 2;
+                const totalH = qrH + pad * 2 + titleH + descH;
+
+                const out = document.createElement('canvas');
+                out.width = totalW; out.height = totalH;
+                const oc = out.getContext('2d');
+                oc.fillStyle = bg; oc.fillRect(0, 0, totalW, totalH);
+
+                let y = pad;
+                if (title) {
+                    oc.font = `bold ${titleFs}px ${titleFont}`;
+                    oc.fillStyle = textColor; oc.textAlign = 'center';
+                    oc.fillText(title, totalW / 2, y + titleFs);
+                    y += titleH;
+                }
+                oc.drawImage(qrCanvas, pad, y);
+                y += qrH;
+                if (desc) {
+                    oc.font = `${descFs}px ${descFont}`;
+                    oc.fillStyle = textColor; oc.textAlign = 'center';
+                    oc.fillText(desc, totalW / 2, y + descGap + descFs);
+                }
+
+                const a = document.createElement('a');
+                a.href = out.toDataURL('image/png');
+                a.download = `qrcode-${Date.now()}.png`;
+                a.click();
+            };
+            tryCapture();
+        });
+
+        /* reset */
+        $('btn-reset').addEventListener('click', () => {
+            $('inp-link').value = '';
+            $('inp-fg').value = '#000000'; $('inp-fg-hex').value = '#000000';
+            $('inp-bg').value = '#ffffff'; $('inp-bg-hex').value = '#ffffff';
+            $('inp-size').value = 200; $('lbl-size').textContent = '200';
+            $('inp-level').value = 'L';
+            $('inp-pad').value = 40; $('lbl-pad').textContent = '40';
+            $('inp-title').value = ''; $('inp-desc').value = '';
+            $('inp-title-fs').value = 32; $('lbl-title-fs').textContent = '32';
+            $('inp-title-gap').value = 30; $('lbl-title-gap').textContent = '30';
+            $('inp-desc-fs').value = 16; $('lbl-desc-fs').textContent = '16';
+            $('inp-desc-gap').value = 20; $('lbl-desc-gap').textContent = '20';
+            $('inp-text-color').value = '#000000'; $('inp-text-color-hex').value = '#000000';
+            $('inp-show-logo').checked = false;
+            $('inp-logo-url').value = '';
+            $('inp-logo-size').value = 40; $('lbl-logo-size').textContent = '40';
+            ['title-extras', 'desc-extras', 'text-color-row', 'logo-extras'].forEach(hide);
+            hide('qr-output'); hide('btn-download');
+            show('empty-hint');
+            qrInstance = null;
+        });
+    </script>
+</body>
+
+</html>

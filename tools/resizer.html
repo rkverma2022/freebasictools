@@ -1,0 +1,816 @@
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body,
+    div,
+    span,
+    input,
+    button,
+    label {
+        font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+    }
+
+    .app {
+        display: flex;
+        flex-direction: column;
+        min-height: 600px;
+        background: #1e1e1e;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .top-bar {
+        display: flex;
+        align-items: center;
+        gap: 0;
+        background: #1e1e1e;
+        border-bottom: 1px solid #2e2e2e;
+    }
+
+    .corner {
+        width: 228px;
+        flex-shrink: 0;
+        border-right: 1px solid #2e2e2e;
+        height: 100%;
+    }
+
+    .main-row {
+        display: flex;
+        flex: 1;
+        min-height: 0;
+    }
+
+    .sidebar {
+        width: 228px;
+        flex-shrink: 0;
+        background: #252525;
+        border-right: 1px solid #333;
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        overflow-y: auto;
+    }
+
+    .section-label {
+        font-size: 10px;
+        font-weight: 500;
+        letter-spacing: .1em;
+        text-transform: uppercase;
+        color: #555;
+        margin-bottom: 2px;
+    }
+
+    .sidebar-section {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .dim-label {
+        font-size: 12px;
+        color: #777;
+        width: 12px;
+    }
+
+    .dim-input {
+        flex: 1;
+        height: 30px;
+        background: #1a1a1a;
+        border: 1px solid #333;
+        border-radius: 6px;
+        color: #ddd;
+        font-size: 12px;
+        font-family: inherit;
+        padding: 0 8px;
+        outline: none;
+    }
+
+    .dim-input:focus {
+        border-color: #555;
+    }
+
+    .dim-unit {
+        font-size: 11px;
+        color: #444;
+    }
+
+    .divider {
+        border: none;
+        border-top: 1px solid #2e2e2e;
+    }
+
+    .presets-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+    }
+
+    .preset-btn {
+        background: #1a1a1a;
+        border: 1px solid #333;
+        border-radius: 5px;
+        color: #888;
+        font-size: 11px;
+        font-family: inherit;
+        padding: 3px 8px;
+        cursor: pointer;
+    }
+
+    .preset-btn:hover {
+        background: #2a2a2a;
+        border-color: #484848;
+        color: #ccc;
+    }
+
+    .upload-label {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        height: 36px;
+        border: 1.5px dashed #383838;
+        border-radius: 8px;
+        font-size: 12px;
+        color: #666;
+        cursor: pointer;
+    }
+
+    .upload-label:hover {
+        border-color: #555;
+        color: #aaa;
+        background: #1f1f1f;
+    }
+
+    .logo-controls {
+        display: none;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .slider-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .slider-label {
+        font-size: 12px;
+        color: #666;
+        flex: 1;
+    }
+
+    .slider-val {
+        font-size: 12px;
+        color: #999;
+        min-width: 30px;
+        text-align: right;
+    }
+
+    input[type=range] {
+        -webkit-appearance: none;
+        height: 3px;
+        background: #333;
+        border-radius: 2px;
+        outline: none;
+        flex: 1;
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 13px;
+        height: 13px;
+        background: #777;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+
+    input[type=range]::-webkit-slider-thumb:hover {
+        background: #aaa;
+    }
+
+    .btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        height: 32px;
+        background: #1a1a1a;
+        border: 1px solid #333;
+        border-radius: 6px;
+        color: #bbb;
+        font-size: 12px;
+        font-family: inherit;
+        cursor: pointer;
+        width: 100%;
+    }
+
+    .btn:hover {
+        background: #272727;
+        border-color: #4a4a4a;
+        color: #eee;
+    }
+
+    .btn-danger {
+        color: #a06060;
+        border-color: #4a2a2a;
+    }
+
+    .btn-danger:hover {
+        background: #2a1a1a;
+        color: #d08080;
+    }
+
+    .export-section {
+        margin-top: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .fmt-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 4px;
+    }
+
+    .fmt-btn {
+        background: #1a1a1a;
+        border: 1px solid #333;
+        border-radius: 5px;
+        color: #777;
+        font-size: 11px;
+        font-family: inherit;
+        padding: 4px 0;
+        cursor: pointer;
+        text-align: center;
+    }
+
+    .fmt-btn:hover {
+        background: #232323;
+        color: #bbb;
+        border-color: #484848;
+    }
+
+    .fmt-btn.active {
+        background: #1f2e1f;
+        border-color: #3d5e3d;
+        color: #7db87d;
+    }
+
+    .quality-row {
+        display: none;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .note {
+        font-size: 11px;
+        color: #444;
+        line-height: 1.5;
+    }
+
+    .btn-dl {
+        background: #1f2e1f;
+        border: 1px solid #3d5e3d;
+        color: #7db87d;
+    }
+
+    .btn-dl:hover {
+        background: #253525;
+        border-color: #4d6e4d;
+        color: #9dcc9d;
+    }
+
+    .viewport-wrap {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        position: relative;
+        background: #181818;
+    }
+
+    .ruler-x {
+        height: 22px;
+        background: #1e1e1e;
+        border-bottom: 1px solid #2e2e2e;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .ruler-y-vp {
+        display: flex;
+        flex: 1;
+        overflow: hidden;
+    }
+
+    .ruler-y {
+        width: 22px;
+        flex-shrink: 0;
+        background: #1e1e1e;
+        border-right: 1px solid #2e2e2e;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .canvas-area {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .canvas-wrapper {
+        position: relative;
+    }
+
+    #cvs {
+        display: block;
+    }
+
+    #logoDiv {
+        display: none;
+        position: absolute;
+        cursor: move;
+        user-select: none;
+    }
+
+    #logoDiv img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+    }
+
+    #rHandle {
+        position: absolute;
+        bottom: -5px;
+        right: -5px;
+        width: 12px;
+        height: 12px;
+        background: #252525;
+        border: 1.5px solid #4d7d4d;
+        border-radius: 3px;
+        cursor: se-resize;
+    }
+
+    .crosshair-x {
+        position: absolute;
+        top: 0;
+        width: 1px;
+        height: 100%;
+        background: #4d7d4d;
+        pointer-events: none;
+        display: none;
+        opacity: .7;
+    }
+
+    .crosshair-y {
+        position: absolute;
+        left: 0;
+        width: 100%;
+        height: 1px;
+        background: #4d7d4d;
+        pointer-events: none;
+        display: none;
+        opacity: .7;
+    }
+
+    .ruler-cursor-x {
+        position: absolute;
+        top: 0;
+        width: 1px;
+        height: 100%;
+        background: #5a9a5a;
+        pointer-events: none;
+        display: none;
+    }
+
+    .ruler-cursor-y {
+        position: absolute;
+        left: 0;
+        width: 100%;
+        height: 1px;
+        background: #5a9a5a;
+        pointer-events: none;
+        display: none;
+    }
+
+    .coord-badge {
+        position: absolute;
+        bottom: 10px;
+        right: 12px;
+        background: #1a1a1a;
+        border: 1px solid #333;
+        border-radius: 6px;
+        padding: 4px 10px;
+        font-size: 11px;
+        color: #666;
+        font-family: 'DM Mono', monospace, inherit;
+        pointer-events: none;
+        display: none;
+    }
+
+    .empty-hint {
+        position: absolute;
+        font-size: 13px;
+        color: #383838;
+        pointer-events: none;
+        text-align: center;
+        line-height: 1.9;
+    }
+</style>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
+
+<h2 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);">Image resizer canvas with live
+    rulers.</h2>
+
+<div class="app">
+    <div class="main-row">
+        <div class="sidebar">
+            <div class="sidebar-section">
+                <p class="section-label">Canvas size</p>
+                <div class="row"><span class="dim-label">W</span><input class="dim-input" id="iW" type="number"
+                        value="800" min="100" max="3000" /><span class="dim-unit">px</span></div>
+                <div class="row"><span class="dim-label">H</span><input class="dim-input" id="iH" type="number"
+                        value="600" min="100" max="3000" /><span class="dim-unit">px</span></div>
+            </div>
+            <div class="sidebar-section">
+                <p class="section-label">Presets</p>
+                <div class="presets-grid" id="presets"></div>
+            </div>
+            <hr class="divider" />
+            <div class="sidebar-section">
+                <p class="section-label">Logo</p>
+                <label class="upload-label"><i class="ti ti-upload" style="font-size:15px;"
+                        aria-hidden="true"></i><span>Upload logo</span><input id="fileIn" type="file" accept="image/*"
+                        style="display:none;" /></label>
+                <div class="logo-controls" id="logoControls">
+                    <div class="slider-row"><span class="slider-label">Opacity</span><input id="opSlider" type="range"
+                            min="10" max="100" value="100" step="1" /><span class="slider-val" id="opVal">100%</span>
+                    </div>
+                    <button class="btn btn-danger" id="btnRemove"><i class="ti ti-trash" style="font-size:14px;"
+                            aria-hidden="true"></i> Remove logo</button>
+                </div>
+            </div>
+            <hr class="divider" />
+            <div class="export-section">
+                <p class="section-label">Export</p>
+                <div class="fmt-grid" id="fmtBtns"></div>
+                <div class="quality-row" id="qualityRow">
+                    <div class="slider-row"><span class="slider-label">Quality</span><input id="qualSlider" type="range"
+                            min="10" max="100" value="90" step="5" /><span class="slider-val" id="qualVal">90%</span>
+                    </div>
+                </div>
+                <p class="note" id="bmpNote" style="display:none;">BMP is uncompressed — files can be large.</p>
+                <button class="btn btn-dl" id="btnDL"><i class="ti ti-download" style="font-size:14px;"
+                        aria-hidden="true"></i> Download <span id="dlLabel">PNG</span></button>
+            </div>
+        </div>
+
+        <div class="viewport-wrap" id="viewportWrap">
+            <div style="display:flex;">
+                <div
+                    style="width:22px;height:22px;background:#1a1a1a;border-right:1px solid #2e2e2e;border-bottom:1px solid #2e2e2e;flex-shrink:0;">
+                </div>
+                <div class="ruler-x" id="rulerX" style="flex:1;"></div>
+            </div>
+            <div class="ruler-y-vp">
+                <div class="ruler-y" id="rulerY"></div>
+                <div class="canvas-area" id="canvasArea">
+                    <div class="canvas-wrapper" id="wrapper">
+                        <canvas id="cvs"></canvas>
+                        <div id="logoDiv"><img id="logoImg" />
+                            <div id="rHandle"></div>
+                        </div>
+                        <div class="crosshair-x" id="chX"></div>
+                        <div class="crosshair-y" id="chY"></div>
+                    </div>
+                    <div class="coord-badge" id="coordBadge">0, 0</div>
+                    <div class="empty-hint" id="emptyHint"><i class="ti ti-photo"
+                            style="font-size:28px;display:block;margin-bottom:8px;color:#2e2e2e;"
+                            aria-hidden="true"></i>Upload a logo to place it<br>on the canvas</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const cvs = document.getElementById('cvs');
+    const ctx = cvs.getContext('2d');
+    const canvasArea = document.getElementById('canvasArea');
+    const wrapper = document.getElementById('wrapper');
+    const logoDiv = document.getElementById('logoDiv');
+    const logoImg = document.getElementById('logoImg');
+    const rHandle = document.getElementById('rHandle');
+    const emptyHint = document.getElementById('emptyHint');
+    const rulerX = document.getElementById('rulerX');
+    const rulerY = document.getElementById('rulerY');
+    const chX = document.getElementById('chX');
+    const chY = document.getElementById('chY');
+    const coordBadge = document.getElementById('coordBadge');
+
+    let cW = 800, cH = 600, scale = 1, logoNat = null;
+    let ls = { x: 0, y: 0, w: 200, h: 100 };
+    let selectedFmt = 'png';
+    let canvasOffsetInArea = { left: 0, top: 0 };
+
+    const PRESETS = [
+        { label: '1:1', w: 1000, h: 1000 }, { label: '16:9', w: 1920, h: 1080 },
+        { label: '4:3', w: 1200, h: 900 }, { label: 'A4', w: 794, h: 1123 },
+        { label: 'IG', w: 1080, h: 1080 }, { label: 'Banner', w: 1200, h: 628 },
+    ];
+
+    const FORMATS = [
+        { id: 'png', label: 'PNG', mime: 'image/png', ext: 'png', lossy: false },
+        { id: 'jpeg', label: 'JPEG', mime: 'image/jpeg', ext: 'jpg', lossy: true },
+        { id: 'webp', label: 'WebP', mime: 'image/webp', ext: 'webp', lossy: true },
+        { id: 'bmp', label: 'BMP', mime: 'image/bmp', ext: 'bmp', lossy: false },
+        { id: 'gif', label: 'GIF', mime: 'image/gif', ext: 'gif', lossy: false },
+        { id: 'tiff', label: 'TIFF', mime: 'image/tiff', ext: 'tiff', lossy: false },
+    ];
+
+    document.getElementById('presets').innerHTML = '';
+    PRESETS.forEach(p => {
+        const b = document.createElement('button');
+        b.className = 'preset-btn'; b.textContent = p.label; b.title = `${p.w}×${p.h}`;
+        b.onclick = () => { document.getElementById('iW').value = p.w; document.getElementById('iH').value = p.h; applyDims(); };
+        document.getElementById('presets').appendChild(b);
+    });
+
+    document.getElementById('fmtBtns').innerHTML = '';
+    FORMATS.forEach(f => {
+        const b = document.createElement('button');
+        b.className = 'fmt-btn'; b.id = 'fmt_' + f.id; b.textContent = f.label;
+        b.onclick = () => selectFmt(f.id);
+        document.getElementById('fmtBtns').appendChild(b);
+    });
+
+    function selectFmt(id) {
+        selectedFmt = id;
+        const fmt = FORMATS.find(f => f.id === id);
+        FORMATS.forEach(f => document.getElementById('fmt_' + f.id).className = 'fmt-btn' + (f.id === id ? ' active' : ''));
+        document.getElementById('qualityRow').style.display = fmt.lossy ? 'flex' : 'none';
+        document.getElementById('bmpNote').style.display = id === 'bmp' ? 'block' : 'none';
+        document.getElementById('dlLabel').textContent = fmt.label;
+    }
+    selectFmt('png');
+
+    document.getElementById('qualSlider').addEventListener('input', e => document.getElementById('qualVal').textContent = e.target.value + '%');
+    document.getElementById('iW').addEventListener('change', applyDims);
+    document.getElementById('iH').addEventListener('change', applyDims);
+
+    function applyDims() {
+        cW = Math.max(10, Math.min(3000, parseInt(document.getElementById('iW').value) || 800));
+        cH = Math.max(10, Math.min(3000, parseInt(document.getElementById('iH').value) || 600));
+        document.getElementById('iW').value = cW;
+        document.getElementById('iH').value = cH;
+        computeScale(); drawCanvas(); syncLogo(); drawRulers();
+    }
+
+    function computeScale() {
+        const vw = canvasArea.clientWidth - 40, vh = canvasArea.clientHeight - 40;
+        scale = Math.min(1, vw / cW, vh / cH);
+        cvs.width = cW; cvs.height = cH;
+        cvs.style.width = Math.round(cW * scale) + 'px';
+        cvs.style.height = Math.round(cH * scale) + 'px';
+        const wr = wrapper.getBoundingClientRect();
+        const ar = canvasArea.getBoundingClientRect();
+        canvasOffsetInArea = { left: wr.left - ar.left, top: wr.top - ar.top };
+    }
+
+    function drawCanvas() {
+        ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, cW, cH);
+        if (logoNat && logoDiv.style.display !== 'none') {
+            ctx.globalAlpha = parseFloat(document.getElementById('opSlider').value) / 100;
+            ctx.drawImage(logoNat, ls.x, ls.y, ls.w, ls.h);
+            ctx.globalAlpha = 1;
+        }
+    }
+
+    function syncLogo() {
+        if (!logoNat) return;
+        logoDiv.style.left = Math.round(ls.x * scale) + 'px';
+        logoDiv.style.top = Math.round(ls.y * scale) + 'px';
+        logoDiv.style.width = Math.round(ls.w * scale) + 'px';
+        logoDiv.style.height = Math.round(ls.h * scale) + 'px';
+    }
+
+    function niceTick(range, pixels) {
+        const raw = range / Math.max(pixels / 60, 1);
+        const mag = Math.pow(10, Math.floor(Math.log10(raw)));
+        const norm = raw / mag;
+        const nice = norm < 2 ? 2 : norm < 5 ? 5 : 10;
+        return nice * mag;
+    }
+
+    function drawRulers() {
+        setTimeout(() => {
+            const wr = wrapper.getBoundingClientRect();
+            const ar = canvasArea.getBoundingClientRect();
+            canvasOffsetInArea = { left: wr.left - ar.left, top: wr.top - ar.top };
+
+            const rxW = rulerX.clientWidth;
+            const ryH = rulerY.clientHeight;
+
+            const cxRuler = document.createElement('canvas');
+            cxRuler.width = rxW; cxRuler.height = 22;
+            const xc = cxRuler.getContext('2d');
+            xc.fillStyle = '#1e1e1e'; xc.fillRect(0, 0, rxW, 22);
+
+            const cyRuler = document.createElement('canvas');
+            cyRuler.width = 22; cyRuler.height = ryH;
+            const yc = cyRuler.getContext('2d');
+            yc.fillStyle = '#1e1e1e'; yc.fillRect(0, 0, 22, ryH);
+
+            const cLeft = canvasOffsetInArea.left;
+            const cTop = canvasOffsetInArea.top;
+            const scaledW = Math.round(cW * scale);
+            const scaledH = Math.round(cH * scale);
+
+            xc.strokeStyle = '#3a3a3a'; xc.fillStyle = '#555'; xc.font = '9px DM Sans,sans-serif'; xc.textAlign = 'center';
+            yc.strokeStyle = '#3a3a3a'; yc.fillStyle = '#555'; yc.font = '9px DM Sans,sans-serif'; yc.textAlign = 'right';
+
+            const tickX = niceTick(cW, scaledW);
+            for (let px = 0; px <= cW; px += tickX) {
+                const sx = cLeft + px * scale;
+                const major = px % tickX === 0;
+                xc.beginPath(); xc.moveTo(sx, major ? 10 : 16); xc.lineTo(sx, 22); xc.strokeStyle = '#3a3a3a'; xc.stroke();
+                if (major && px > 0 && sx > 8 && sx < rxW - 8) { xc.fillStyle = '#555'; xc.fillText(px, sx, 9); }
+            }
+            xc.fillStyle = '#333'; xc.fillRect(0, 0, cLeft, 22);
+            xc.fillStyle = '#333'; xc.fillRect(cLeft + scaledW, 0, rxW - (cLeft + scaledW), 22);
+            xc.strokeStyle = '#2e2e2e'; xc.beginPath(); xc.moveTo(cLeft, 0); xc.lineTo(cLeft, 22); xc.stroke();
+            xc.beginPath(); xc.moveTo(cLeft + scaledW, 0); xc.lineTo(cLeft + scaledW, 22); xc.stroke();
+
+            const tickY = niceTick(cH, scaledH);
+            for (let py = 0; py <= cH; py += tickY) {
+                const sy = cTop + py * scale;
+                const major = py % tickY === 0;
+                yc.beginPath(); yc.moveTo(major ? 10 : 16, sy); yc.lineTo(22, sy); yc.strokeStyle = '#3a3a3a'; yc.stroke();
+                if (major && py > 0 && sy > 8 && sy < ryH - 8) {
+                    yc.save(); yc.translate(9, sy); yc.rotate(-Math.PI / 2); yc.fillStyle = '#555'; yc.textAlign = 'center'; yc.fillText(py, 0, 3); yc.restore();
+                }
+            }
+            yc.fillStyle = '#333'; yc.fillRect(0, 0, 22, cTop);
+            yc.fillStyle = '#333'; yc.fillRect(0, cTop + scaledH, 22, ryH - (cTop + scaledH));
+            yc.strokeStyle = '#2e2e2e'; yc.beginPath(); yc.moveTo(0, cTop); yc.lineTo(22, cTop); yc.stroke();
+            yc.beginPath(); yc.moveTo(0, cTop + scaledH); yc.lineTo(22, cTop + scaledH); yc.stroke();
+
+            rulerX.style.cssText = 'height:22px;background:#1e1e1e;border-bottom:1px solid #2e2e2e;flex:1;overflow:hidden;';
+            rulerX.innerHTML = '';
+            cxRuler.style.cssText = 'display:block;width:100%;height:22px;';
+            rulerX.appendChild(cxRuler);
+
+            rulerY.innerHTML = '';
+            cyRuler.style.cssText = 'display:block;width:22px;height:100%;';
+            rulerY.appendChild(cyRuler);
+        }, 50);
+    }
+
+    canvasArea.addEventListener('mousemove', e => {
+        const ar = canvasArea.getBoundingClientRect();
+        const wr = wrapper.getBoundingClientRect();
+        const mx = e.clientX - ar.left;
+        const my = e.clientY - ar.top;
+        const cx = e.clientX - wr.left;
+        const cy = e.clientY - wr.top;
+        const px = Math.round(cx / scale);
+        const py = Math.round(cy / scale);
+        const inside = cx >= 0 && cy >= 0 && cx <= wr.width && cy <= wr.height;
+
+        chX.style.display = 'block'; chY.style.display = 'block';
+        chX.style.left = Math.round(cx) + 'px';
+        chY.style.top = Math.round(cy) + 'px';
+
+        if (inside) {
+            coordBadge.style.display = 'block';
+            coordBadge.textContent = `${Math.max(0, Math.min(cW, px))} , ${Math.max(0, Math.min(cH, py))} px`;
+        } else {
+            coordBadge.style.display = 'none';
+        }
+
+        const rxCanv = rulerX.querySelector('canvas');
+        const ryCanv = rulerY.querySelector('canvas');
+        if (rxCanv) {
+            const rxc = rxCanv.getContext('2d');
+            const wr2 = wrapper.getBoundingClientRect();
+            const ar2 = canvasArea.getBoundingClientRect();
+            const offL = wr2.left - ar2.left;
+            const rxW = rulerX.clientWidth;
+            rxc.clearRect(0, 14, rxW, 8);
+            rxc.fillStyle = '#5a9a5a';
+            rxc.fillRect(offL + cx - 0.5, 14, 1, 8);
+        }
+        if (ryCanv) {
+            const ryc = ryCanv.getContext('2d');
+            const wr2 = wrapper.getBoundingClientRect();
+            const ar2 = canvasArea.getBoundingClientRect();
+            const offT = wr2.top - ar2.top;
+            const ryH = rulerY.clientHeight;
+            ryc.clearRect(14, 0, 8, ryH);
+            ryc.fillStyle = '#5a9a5a';
+            ryc.fillRect(14, offT + cy - 0.5, 8, 1);
+        }
+    });
+
+    canvasArea.addEventListener('mouseleave', () => {
+        chX.style.display = 'none'; chY.style.display = 'none';
+        coordBadge.style.display = 'none';
+        drawRulers();
+    });
+
+    document.getElementById('fileIn').addEventListener('change', e => {
+        const file = e.target.files[0]; if (!file) return;
+        const url = URL.createObjectURL(file);
+        const img = new Image();
+        img.onload = () => {
+            logoNat = img;
+            const maxW = Math.min(cW * .4, 300);
+            const ratio = img.naturalHeight / img.naturalWidth;
+            ls.w = Math.round(maxW); ls.h = Math.round(maxW * ratio);
+            ls.x = Math.round((cW - ls.w) / 2); ls.y = Math.round((cH - ls.h) / 2);
+            logoImg.src = url;
+            logoDiv.style.display = 'block';
+            emptyHint.style.display = 'none';
+            document.getElementById('logoControls').style.display = 'flex';
+            syncLogo(); drawCanvas();
+        };
+        img.src = url;
+    });
+
+    document.getElementById('opSlider').addEventListener('input', e => {
+        document.getElementById('opVal').textContent = e.target.value + '%'; drawCanvas();
+    });
+
+    document.getElementById('btnRemove').addEventListener('click', () => {
+        logoNat = null; logoDiv.style.display = 'none'; emptyHint.style.display = 'block';
+        document.getElementById('logoControls').style.display = 'none';
+        document.getElementById('fileIn').value = ''; drawCanvas();
+    });
+
+    document.getElementById('btnDL').addEventListener('click', () => {
+        const fmt = FORMATS.find(f => f.id === selectedFmt);
+        const tmp = document.createElement('canvas'); tmp.width = cW; tmp.height = cH;
+        const tc = tmp.getContext('2d');
+        tc.fillStyle = '#fff'; tc.fillRect(0, 0, cW, cH);
+        if (logoNat) { tc.globalAlpha = parseFloat(document.getElementById('opSlider').value) / 100; tc.drawImage(logoNat, ls.x, ls.y, ls.w, ls.h); tc.globalAlpha = 1; }
+        const quality = fmt.lossy ? parseFloat(document.getElementById('qualSlider').value) / 100 : undefined;
+        if (['bmp', 'gif', 'tiff'].includes(fmt.id)) {
+            const a = document.createElement('a'); a.href = tmp.toDataURL('image/png'); a.download = `canvas_${cW}x${cH}.${fmt.ext}`; a.click(); return;
+        }
+        tmp.toBlob(blob => {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a'); a.href = url; a.download = `canvas_${cW}x${cH}.${fmt.ext}`; a.click();
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+        }, fmt.mime, quality);
+    });
+
+    function makeDrag(el, getS, onM, stopProp) {
+        el.addEventListener('mousedown', e => {
+            if (stopProp) e.stopPropagation();
+            e.preventDefault();
+            const s = getS(e);
+            const mv = ev => onM(ev, s);
+            const up = () => { document.removeEventListener('mousemove', mv); document.removeEventListener('mouseup', up); };
+            document.addEventListener('mousemove', mv); document.addEventListener('mouseup', up);
+        });
+    }
+
+    makeDrag(logoDiv,
+        e => ({ cx: e.clientX, cy: e.clientY, ox: ls.x, oy: ls.y }),
+        (ev, s) => {
+            if (ev.target === rHandle) return;
+            ls.x = Math.round(Math.max(0, Math.min(cW - ls.w, s.ox + (ev.clientX - s.cx) / scale)));
+            ls.y = Math.round(Math.max(0, Math.min(cH - ls.h, s.oy + (ev.clientY - s.cy) / scale)));
+            syncLogo(); drawCanvas();
+        }
+    );
+
+    makeDrag(rHandle,
+        e => ({ cx: e.clientX, ow: ls.w, oh: ls.h }),
+        (ev, s) => {
+            const ratio = s.oh / s.ow;
+            const newW = Math.max(40, Math.min(cW - ls.x, s.ow + (ev.clientX - s.cx) / scale));
+            ls.w = Math.round(newW); ls.h = Math.round(newW * ratio);
+            syncLogo(); drawCanvas();
+        }, true
+    );
+
+    window.addEventListener('resize', () => { computeScale(); syncLogo(); drawRulers(); });
+    applyDims();
+</script>
